@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import { httpServer } from './http_server/index';
-import './ws_server/app';
+import dotenv from "dotenv";
+import httpServer from "./http_server/index";
+import "./ws_server/app";
 
 dotenv.config();
 

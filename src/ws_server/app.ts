@@ -1,20 +1,21 @@
-import dotenv from 'dotenv';
-import { WebSocketServer } from 'ws';
+import dotenv from "dotenv";
+import { WebSocketServer } from "ws";
+import messageHandler from "../handler/messageHandler";
 
 dotenv.config();
 
 const WS_PORT = Number(process.env.WS_PORT) || 8080;
 
-export const wss = new WebSocketServer({ port: WS_PORT });
+const wss = new WebSocketServer({ port: WS_PORT });
 
-wss.on('listening', () => {
+wss.on("listening", () => {
   console.log(`Start backend on the ${WS_PORT} port!`);
-})
-
-wss.on('connection', (ws) => {
-  ws.on('message', function message(data) {
-    console.log('received: %s', data);
-  });
-
-  ws.send('something');
 });
+
+wss.on("connection", (ws) => {
+  ws.on("message", messageHandler);
+
+  ws.send("something");
+});
+
+export default wss;
