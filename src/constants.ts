@@ -11,3 +11,5 @@ const DRAWING = {
   RECTANGLE: "draw_rectangle",
   SQUARE: "draw_square",
 };
+
+export { NAVIGATION, DRAWING };

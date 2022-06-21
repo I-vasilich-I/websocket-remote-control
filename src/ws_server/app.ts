@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { WebSocketServer } from "ws";
-import messageHandler from "../handler/messageHandler";
+import messageHandler from "../handlers/messageHandler";
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ wss.on("listening", () => {
 });
 
 wss.on("connection", (ws) => {
-  ws.on("message", messageHandler);
+  ws.on("message", (data) => messageHandler(data, ws));
 
   ws.send("something");
 });
