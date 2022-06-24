@@ -3,7 +3,7 @@ import drawHandler from "./drawHandler";
 import navigationHandler from "./navigationHandler";
 import printScreenHandler from "./printScreenHandler";
 
-const messageHandler = (data: RawData, ws: WebSocket) => {
+const messageHandler = async (data: RawData, ws: WebSocket) => {
   console.log("received: %s", data);
 
   const command = data.toString();
@@ -13,18 +13,24 @@ const messageHandler = (data: RawData, ws: WebSocket) => {
 
     if (res) {
       ws.send(res);
+      return;
     }
 
+    ws.send(`${command}\0`);
     return;
   }
 
   if (command.startsWith("draw")) {
     drawHandler(command);
+    ws.send(`${command}\0`);
     return;
   }
 
   if (command.startsWith("prnt_scrn")) {
-    printScreenHandler(command);
+    const image = await printScreenHandler();
+    if (image) {
+      ws.send(`prnt_scrn ${image}\0`);
+    }
   }
 };
 

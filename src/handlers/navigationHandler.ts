@@ -28,7 +28,7 @@ const navigationHandler = (data: string) => {
       robot.moveMouse(x + +px, y);
       break;
     default:
-      response = `${POSITION} ${x},${y}`;
+      response = `${POSITION} ${x},${y}\0`;
       break;
   }
 

@@ -15,7 +15,13 @@ wss.on("listening", () => {
 wss.on("connection", (ws) => {
   ws.on("message", (data) => messageHandler(data, ws));
 
-  ws.send("something");
+  ws.on("close", () => {
+    console.log("Frontend closed ws connection");
+  });
+
+  ws.on("error", (err: Error) => {
+    console.error(err);
+  });
 });
 
 export default wss;
