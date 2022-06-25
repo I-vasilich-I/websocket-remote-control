@@ -42,7 +42,7 @@ const drawCircle = (radius: number) => {
   mouseToggle("up");
 };
 
-const drawHandler = (data: string) => {
+const drawService = (data: string) => {
   const [command, width, height] = data.split(" ");
 
   if (!command) {
@@ -64,4 +64,4 @@ const drawHandler = (data: string) => {
   }
 };
 
-export default drawHandler;
+export default drawService;

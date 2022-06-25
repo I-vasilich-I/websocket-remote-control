@@ -3,7 +3,7 @@ import { NAVIGATION } from "../constants";
 
 const { UP, DOWN, LEFT, RIGHT, POSITION } = NAVIGATION;
 
-const navigationHandler = (data: string) => {
+const navigationService = (data: string) => {
   const [command, px] = data.split(" ");
 
   if (!command) {
@@ -35,4 +35,4 @@ const navigationHandler = (data: string) => {
   return response;
 };
 
-export default navigationHandler;
+export default navigationService;

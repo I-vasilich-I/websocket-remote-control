@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
-import { WebSocketServer } from "ws";
+import { createWebSocketStream, WebSocketServer } from "ws";
+import errorHandler from "../handlers/errorHandler";
 import messageHandler from "../handlers/messageHandler";
 
 dotenv.config();
@@ -13,14 +14,22 @@ wss.on("listening", () => {
 });
 
 wss.on("connection", (ws) => {
-  ws.on("message", (data) => messageHandler(data, ws));
+  const duplex = createWebSocketStream(ws, {
+    decodeStrings: false,
+  });
+
+  duplex.on("data", async (data) => duplex.write(await messageHandler(data), errorHandler));
 
   ws.on("close", () => {
     console.log("Frontend closed ws connection");
   });
 
-  ws.on("error", (err: Error) => {
-    console.error(err);
+  ws.on("error", errorHandler);
+
+  process.on("SIGINT", () => {
+    process.stdout.write("\nClosing websocket...\n");
+    wss.close();
+    process.exit(0);
   });
 });
 

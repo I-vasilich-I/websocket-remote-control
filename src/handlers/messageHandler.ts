@@ -1,37 +1,40 @@
-import { RawData, WebSocket } from "ws";
-import drawHandler from "./drawHandler";
-import navigationHandler from "./navigationHandler";
-import printScreenHandler from "./printScreenHandler";
+import { RawData } from "ws";
+import drawService from "../services/drawService";
+import navigationService from "../services/navigationService";
+import printScreenService from "../services/printScreenService";
 
-const messageHandler = async (data: RawData, ws: WebSocket) => {
+const messageHandler = async (data: RawData) => {
   console.log("received: %s", data);
 
   const command = data.toString();
 
-  if (command.startsWith("mouse")) {
-    const res = navigationHandler(command);
+  try {
+    if (command.startsWith("mouse")) {
+      const res = navigationService(command);
 
-    if (res) {
-      ws.send(res);
-      return;
+      if (res) {
+        return res;
+      }
+
+      return `${command}\0`;
     }
 
-    ws.send(`${command}\0`);
-    return;
-  }
-
-  if (command.startsWith("draw")) {
-    drawHandler(command);
-    ws.send(`${command}\0`);
-    return;
-  }
-
-  if (command.startsWith("prnt_scrn")) {
-    const image = await printScreenHandler();
-    if (image) {
-      ws.send(`prnt_scrn ${image}\0`);
+    if (command.startsWith("draw")) {
+      drawService(command);
+      return `${command}\0`;
     }
+
+    if (command.startsWith("prnt_scrn")) {
+      const image = await printScreenService();
+      if (image) {
+        return `prnt_scrn ${image}\0`;
+      }
+    }
+  } catch {
+    throw Error("Error in message handler");
   }
+
+  return command;
 };
 
 export default messageHandler;

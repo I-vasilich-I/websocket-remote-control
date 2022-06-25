@@ -1,7 +1,7 @@
 import Jimp from "jimp";
 import { getMousePos, screen } from "robotjs";
 
-const printScreenHandler = async () => {
+const printScreenService = async () => {
   // messes colors up
   // try {
   //   const { x, y } = getMousePos();
@@ -55,4 +55,4 @@ const printScreenHandler = async () => {
   return data.split(",")[1];
 };
 
-export default printScreenHandler;
+export default printScreenService;
